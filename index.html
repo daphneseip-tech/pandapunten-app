@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <!-- Favicon voor browser tabs -->
 <link rel="icon" href="https://i.postimg.cc/ZYQcLzbR/Ontwerp-zonder-titel.png" type="image/png">
 
@@ -139,15 +140,23 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("showAdminPanel","true");
     }
 
-    resetButton.onclick = async ()=>{
-      await fetch(`${API}/reset`,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({token})
-      });
-      alert("Je pandapunten zijn gereset 🐼");
-      await loadFriends();
-    };
+resetButton.onclick = async ()=>{
+  await fetch(`${API}/reset`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({token})
+  });
+
+  // 🎉 Confetti-effect
+  confetti({
+    particleCount: 150,
+    spread: 70,
+    origin: { y: 0.6 }
+  });
+
+  alert("Je pandapunten zijn gereset 🐼");
+  await loadFriends();
+};
 
     if(token==="39f90f0a9ab0145b"){
       const addUserBtn = document.getElementById("addUserBtn");
@@ -206,13 +215,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function loadFriends(){
+    async function loadFriends(){
     const res = await fetch(`${API}/users`);
-    const users = await res.json();
+    let users = await res.json();
+
+    // Sorteer gebruikers: hoogste pandapunten eerst
+    users.sort((a, b) => b.pandapunten - a.pandapunten);
+
     friendsList.innerHTML = users.map(u=>{
-      const nextPointDate = new Date(new Date(u.last_reset).getTime()+7*24*60*60*1000);
+      const nextPointDate = new Date(new Date(u.last_reset).getTime() + 7*24*60*60*1000);
       const msRemaining = nextPointDate - new Date();
-      const daysRemaining = Math.max(0,Math.ceil(msRemaining/(1000*60*60*24)));
+      const daysRemaining = Math.max(0, Math.ceil(msRemaining / (1000*60*60*24)));
       return `
         <div class="flex justify-between items-center bg-pink-100 rounded-lg p-3">
           <div class="text-left">
