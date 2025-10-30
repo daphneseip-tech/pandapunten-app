@@ -2,32 +2,20 @@
 <html lang="nl">
 <head>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <!-- Favicon voor browser tabs -->
-<link rel="icon" href="https://i.postimg.cc/ZYQcLzbR/Ontwerp-zonder-titel.png" type="image/png">
+  <link rel="icon" href="https://i.postimg.cc/ZYQcLzbR/Ontwerp-zonder-titel.png" type="image/png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Pandapunten 🐼</title>
-
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-<!-- Voor iOS/Android home screen -->
-<link rel="apple-touch-icon" href="https://i.postimg.cc/ZYQcLzbR/Ontwerp-zonder-titel.png">
-  <!-- Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pandapunten 🐼</title>
-<script src="https://cdn.tailwindcss.com"></script>
-  <!-- PWA manifest -->
+  <link rel="apple-touch-icon" href="https://i.postimg.cc/ZYQcLzbR/Ontwerp-zonder-titel.png">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#FF5AAC">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- Splashscreen CSS -->
   <style>
+    /* Splashscreen */
     #splash {
       position: fixed;
       inset: 0;
@@ -67,31 +55,48 @@
 <header class="flex items-center justify-center mt-6">
   <span class="text-5xl">🐼</span>
   <h1 class="text-3xl font-bold text-[#FF5AAC] ml-3">Pandapunten</h1>
-@@ -38,33 +78,13 @@ <h2 class="text-2xl font-bold text-[#FF5AAC] mb-3">Pandapunten overzicht</h2>
+</header>
+
+<!-- Login sectie -->
+<div id="login-section" class="flex flex-col items-center mt-12">
+  <h2 class="text-xl font-semibold text-[#FF5AAC] mb-2">Log in</h2>
+  <p class="text-gray-600 mb-3 text-center text-sm px-6">
+    Vul hier één keer je persoonlijke pandatoken in. Daarna hoef je nooit meer in te loggen!
+  </p>
+  <input id="tokenInput" type="text" placeholder="Pandatoken" class="p-2 rounded border border-[#FF5AAC] text-center">
+  <button id="saveTokenButton" class="mt-3 bg-[#FF5AAC] hover:bg-pink-600 text-white px-4 py-2 rounded-lg shadow-md transition">Opslaan</button>
+</div>
+
+<!-- App sectie -->
+<div id="app" class="hidden flex flex-col items-center mt-10 w-full px-4">
+  <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm text-center">
+    <h2 class="text-2xl font-bold text-[#FF5AAC] mb-3">Pandapunten overzicht</h2>
+    <div id="friendsList" class="flex flex-col gap-3"></div>
   </div>
 
   <button id="resetButton" class="mt-8 bg-[#FF5AAC] hover:bg-pink-600 text-white px-6 py-3 rounded-full text-lg font-semibold shadow-md transition">
     ...
-    Reset punten
   </button>
 </div>
 
 <!-- Beheerderpaneel -->
-<!-- Admin paneel (ongewijzigd) -->
 <div id="adminPanel" class="hidden flex flex-col items-center mt-12 w-full px-4">
   <h2 class="text-2xl font-bold text-[#FF5AAC] mb-4">Beheerderpaneel 🐼</h2>
   <div class="bg-white rounded-2xl shadow-lg p-6 w-full max-w-sm text-center space-y-4">
+    <!-- Nieuwe gebruiker -->
     <div>
       <h3 class="text-lg font-semibold text-[#FF5AAC]">Nieuwe gebruiker toevoegen</h3>
       <input id="newUserName" type="text" placeholder="Naam" class="p-2 mt-2 w-full rounded border border-[#FF5AAC]">
       <input id="newUserStartDate" type="date" class="p-2 mt-2 w-full rounded border border-[#FF5AAC]">
       <button id="addUserBtn" class="mt-3 bg-[#FF5AAC] hover:bg-pink-600 text-white px-4 py-2 rounded-lg shadow-md">Toevoegen</button>
     </div>
+    <!-- Gebruiker verwijderen -->
     <div>
       <h3 class="text-lg font-semibold text-[#FF5AAC] mt-4">Gebruiker verwijderen</h3>
       <input id="removeTokenInput" type="text" placeholder="Token van gebruiker" class="p-2 mt-2 w-full rounded border border-[#FF5AAC]">
       <button id="removeUserBtn" class="mt-3 bg-[#FF5AAC] hover:bg-pink-600 text-white px-4 py-2 rounded-lg shadow-md">Verwijderen</button>
     </div>
+    <!-- Resetdatum aanpassen -->
     <div>
       <h3 class="text-lg font-semibold text-[#FF5AAC] mt-4">Resetdatum aanpassen</h3>
       <input id="resetTokenInput" type="text" placeholder="Token van gebruiker" class="p-2 mt-2 w-full rounded border border-[#FF5AAC]">
@@ -100,11 +105,15 @@
     </div>
     <button id="toggleAdminView" class="text-xs mt-2 text-gray-500 underline">Toon/verberg adminpaneel</button>
   </div>
-  <!-- admin content zoals eerder -->
 </div>
 
 <!-- Admin instructie-popup -->
-@@ -77,6 +97,19 @@ <h3 class="text-lg font-semibold text-[#FF5AAC] mt-4">Resetdatum aanpassen</h3>
+<div id="adminTip" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-[#FF5AAC] text-white p-4 rounded-xl shadow-lg z-50 hidden max-w-xs text-center text-sm">
+  Tip: Gebruik de <u>“Toon/verberg adminpaneel”</u> knop om de beheerderopties aan of uit te zetten per apparaat.
+  <button id="closeTip" class="ml-2 bg-white text-[#FF5AAC] px-2 py-1 rounded">Oké</button>
+</div>
+
+<script>
 const API = "https://pandapunten-server-1.onrender.com/api";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -124,7 +133,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginSection = document.getElementById("login-section");
   const appSection = document.getElementById("app");
   const tokenInput = document.getElementById("tokenInput");
-@@ -85,28 +118,16 @@ <h3 class="text-lg font-semibold text-[#FF5AAC] mt-4">Resetdatum aanpassen</h3>
+  const saveTokenButton = document.getElementById("saveTokenButton");
+  const resetButton = document.getElementById("resetButton");
   const friendsList = document.getElementById("friendsList");
   const adminPanel = document.getElementById("adminPanel");
   const toggleAdminBtn = document.getElementById("toggleAdminView");
@@ -136,26 +146,19 @@ document.addEventListener("DOMContentLoaded", () => {
   if(!localStorage.getItem("adminTipShown")){
     adminTip.classList.remove("hidden");
   }
-  closeTipBtn.onclick = ()=>{
   closeTipBtn.onclick = () => {
     adminTip.classList.add("hidden");
     localStorage.setItem("adminTipShown","true");
   }
 
-  const pandaPhrases = [
-    "seks gehad 🛏️","gevreeën 💞","het gedaan ✅","de liefde bedreven ❤️","het met iemand gehad 🤝",
-    "de bloemetjes buitengezet 🌸","de horizontale tango gedaan 💃🕺","de lakens opgeschud 🛌",
-    "een potje geschaakt","mijn cardio gedaan 🏋️‍♂️","het konijntje geknuffeld 🐇","gescoord 🎯",
-    "geneukt 🍑","gebonkt 💥","geknald 💣","gepakt 🫱","een beurt gehad 🔁","gesmasht 🔨",
-    "de nacht gedeeld 🌙","iemand bemind 💋","intiem geweest 🤍","het bed getest 🧺",
-    "het bed laten kreunen 🛏️🎶","op wolk zeven gelogeerd ☁️7️⃣"
-  ];
-  resetButton.textContent = pandaPhrases[Math.floor(Math.random()*pandaPhrases.length)];
-  };
-
   const savedToken = localStorage.getItem("pandatoken");
   if(savedToken){
-@@ -119,13 +140,12 @@ <h3 class="text-lg font-semibold text-[#FF5AAC] mt-4">Resetdatum aanpassen</h3>
+    loginSection.classList.add("hidden");
+    appSection.classList.remove("hidden");
+    startApp(savedToken.trim());
+  }
+
+  saveTokenButton.addEventListener("click", ()=>{
     const token = tokenInput.value.trim();
     if(!token) return alert("Voer je pandatoken in 🐼");
     localStorage.setItem("pandatoken", token);
@@ -165,38 +168,33 @@ document.addEventListener("DOMContentLoaded", () => {
     startApp(token);
   });
 
-  toggleAdminBtn.addEventListener("click", ()=>{
   toggleAdminBtn?.addEventListener("click", ()=>{
     const current = localStorage.getItem("showAdminPanel")==="true";
     localStorage.setItem("showAdminPanel",(!current).toString());
     location.reload();
-@@ -134,120 +154,49 @@ <h3 class="text-lg font-semibold text-[#FF5AAC] mt-4">Resetdatum aanpassen</h3>
+  });
+
   async function startApp(token){
     await loadFriends();
 
-    // Forceer adminpaneel zichtbaar bij admin-token
     if(token === "39f90f0a9ab0145b"){
       adminPanel.classList.remove("hidden");
       localStorage.setItem("showAdminPanel","true");
     }
 
-resetButton.onclick = async ()=>{
-  await fetch(`${API}/reset`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({token})
-  });
+    // Reset button blijft je bestaande teksten gebruiken
+    resetButton.onclick = async ()=>{
+      await fetch(`${API}/reset`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({token})
+      });
 
-  // 🎉 Confetti-effect
-  confetti({
-    particleCount: 150,
-    spread: 70,
-    origin: { y: 0.6 }
-  });
+      // Confetti
+      confetti({ particleCount:150, spread:70, origin:{y:0.6} });
 
-  alert("Je pandapunten zijn gereset 🐼");
-  await loadFriends();
-};
+      await loadFriends();
+    };
 
     if(token==="39f90f0a9ab0145b"){
       const addUserBtn = document.getElementById("addUserBtn");
@@ -252,77 +250,37 @@ resetButton.onclick = async ()=>{
         if(res.ok){ alert(data.message); await loadFriends(); resetTokenInput.value=""; resetNewDate.value=""; }
         else alert(data.error || "Fout bij aanpassen datum");
       };
-    resetButton.onclick = async () => {
-      await fetch(`${API}/reset`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({token})
-      });
-
-      confetti({particleCount:150, spread:70, origin:{y:0.6}});
-      await loadFriends();
-    };
-
-    async function loadFriends(){
-      const res = await fetch(`${API}/users`);
-      let users = await res.json();
-      users.sort((a,b)=> b.pandapunten - a.pandapunten);
-
-      friendsList.innerHTML = users.map(u=>{
-        const nextPointDate = new Date(new Date(u.last_reset).getTime() + 7*24*60*60*1000);
-        const msRemaining = nextPointDate - new Date();
-        const daysRemaining = Math.max(0, Math.ceil(msRemaining / (1000*60*60*24)));
-
-        let bgColor = "bg-pink-100";
-        let textColor = "text-[#FF5AAC]";
-        if(u.pandapunten >=5 && u.pandapunten <=9) bgColor="bg-red-200";
-        else if(u.pandapunten >=10 && u.pandapunten <=19) bgColor="bg-red-400";
-        else if(u.pandapunten >=20) { bgColor="bg-red-700"; textColor="text-white"; }
-
-        return `
-  <div class="flex justify-between items-center ${bgColor} rounded-lg p-3 transition-all duration-300 shadow">
-    <div class="text-left">
-      <p class="font-semibold ${textColor}">${u.name}</p>
-      <p class="text-xs ${textColor} text-opacity-70">Volgende punt in ${daysRemaining} dag(en)</p>
-    </div>
-    <p class="text-4xl font-bold ${textColor}">${u.pandapunten}</p>
-  </div>`;
-      }).join("");
     }
   }
 
-      async function loadFriends(){
+  async function loadFriends(){
     const res = await fetch(`${API}/users`);
     let users = await res.json();
-
-    // Sorteer gebruikers: hoogste pandapunten eerst
-    users.sort((a, b) => b.pandapunten - a.pandapunten);
+    users.sort((a,b)=> b.pandapunten - a.pandapunten);
 
     friendsList.innerHTML = users.map(u=>{
       const nextPointDate = new Date(new Date(u.last_reset).getTime() + 7*24*60*60*1000);
       const msRemaining = nextPointDate - new Date();
       const daysRemaining = Math.max(0, Math.ceil(msRemaining / (1000*60*60*24)));
 
-      // 🎨 Achtergrondkleur per puntenniveau
-      let bgColor = "bg-pink-100"; // standaard 0-4
-      if (u.pandapunten >= 5 && u.pandapunten <= 9) {
-        bgColor = "bg-red-200";
-      } else if (u.pandapunten >= 10 && u.pandapunten <= 19) {
-        bgColor = "bg-red-400";
-      } else if (u.pandapunten >= 20) {
-        bgColor = "bg-red-700 text-white";
-      }
+      let bgColor = "bg-pink-100";
+      let textColor = "text-[#FF5AAC]";
+      if(u.pandapunten >=5 && u.pandapunten <=9) bgColor="bg-red-200";
+      else if(u.pandapunten >=10 && u.pandapunten <=19) bgColor="bg-red-400";
+      else if(u.pandapunten >=20) { bgColor="bg-red-700"; textColor="text-white"; }
 
       return `
         <div class="flex justify-between items-center ${bgColor} rounded-lg p-3 transition-all duration-300 shadow">
           <div class="text-left">
-            <p class="font-semibold text-[#FF5AAC]">${u.name}</p>
-            <p class="text-xs text-gray-600">Volgende punt in ${daysRemaining} dag(en)</p>
+            <p class="font-semibold ${textColor}">${u.name}</p>
+            <p class="text-xs ${textColor} text-opacity-70">Volgende punt in ${daysRemaining} dag(en)</p>
           </div>
-          <p class="text-4xl font-bold text-[#FF5AAC]">${u.pandapunten}</p>
+          <p class="text-4xl font-bold ${textColor}">${u.pandapunten}</p>
         </div>`;
     }).join("");
   }
 
 });
 </script>
+</body>
+</html>
