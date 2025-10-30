@@ -215,7 +215,7 @@ resetButton.onclick = async ()=>{
     }
   }
 
-    async function loadFriends(){
+      async function loadFriends(){
     const res = await fetch(`${API}/users`);
     let users = await res.json();
 
@@ -226,8 +226,19 @@ resetButton.onclick = async ()=>{
       const nextPointDate = new Date(new Date(u.last_reset).getTime() + 7*24*60*60*1000);
       const msRemaining = nextPointDate - new Date();
       const daysRemaining = Math.max(0, Math.ceil(msRemaining / (1000*60*60*24)));
+
+      // 🎨 Achtergrondkleur per puntenniveau
+      let bgColor = "bg-pink-100"; // standaard 0-4
+      if (u.pandapunten >= 5 && u.pandapunten <= 9) {
+        bgColor = "bg-red-200";
+      } else if (u.pandapunten >= 10 && u.pandapunten <= 19) {
+        bgColor = "bg-red-400";
+      } else if (u.pandapunten >= 20) {
+        bgColor = "bg-red-700 text-white";
+      }
+
       return `
-        <div class="flex justify-between items-center bg-pink-100 rounded-lg p-3">
+        <div class="flex justify-between items-center ${bgColor} rounded-lg p-3 transition-all duration-300 shadow">
           <div class="text-left">
             <p class="font-semibold text-[#FF5AAC]">${u.name}</p>
             <p class="text-xs text-gray-600">Volgende punt in ${daysRemaining} dag(en)</p>
