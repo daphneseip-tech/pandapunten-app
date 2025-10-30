@@ -187,13 +187,14 @@ document.addEventListener("DOMContentLoaded", () => {
         else if(u.pandapunten >=20) { bgColor="bg-red-700"; textColor="text-white"; }
 
         return `
-          <div class="flex justify-between items-center ${bgColor} rounded-lg p-3 transition-all duration-300 shadow">
-            <div class="text-left">
-              <p class="font-semibold ${textColor}">${u.name}</p>
-              <p class="text-xs text-gray-600">Volgende punt in ${daysRemaining} dag(en)</p>
-            </div>
-            <p class="text-4xl font-bold ${textColor}">${u.pandapunten}</p>
-          </div>`;
+          return `
+  <div class="flex justify-between items-center ${bgColor} rounded-lg p-3 transition-all duration-300 shadow">
+    <div class="text-left">
+      <p class="font-semibold ${textColor}">${u.name}</p>
+      <p class="text-xs ${textColor} text-opacity-70">Volgende punt in ${daysRemaining} dag(en)</p>
+    </div>
+    <p class="text-4xl font-bold ${textColor}">${u.pandapunten}</p>
+  </div>`;
       }).join("");
     }
   }
